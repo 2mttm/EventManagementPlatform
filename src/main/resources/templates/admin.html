@@ -1,0 +1,49 @@
+<!DOCTYPE HTML>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <title>Admin Panel</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <link href="https://getbootstrap.com/docs/5.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+</head>
+<body class="container" style="padding-top: 4.5rem;">
+<header th:insert="blocks/header :: header"></header>
+
+<div sec:authorize="isAuthenticated()">Authenticated username: <span sec:authentication="principal.username"></span></div>
+<h1>List of Users</h1>
+
+<table class="table table-light">
+  <thead class="">
+    <th scope="col">ID</th>
+    <th scope="col">Name</th>
+    <th scope="col">Mail</th>
+    <th scope="col">Roles</th>
+    <th scope="col">Actions</th>
+  </thead>
+  <tbody>
+  <form action="admin" method="post" th:each="user : ${allUsers}">
+  <tr>
+    <td th:text="${user.id}"></td>
+    <td>
+      <input th:value="${user.name}" name="name">
+    </td>
+    <td>
+      <input th:value="${user.username}" name="username">
+    </td>
+    <td>
+      <input th:value="${#strings.listJoin(user.roles.![name], ' ')}" name="rolesString">
+    </td>
+    <td>
+
+        <input type="hidden" name="userId" th:value="${user.id}"/>
+        <button type="submit" name="action" value="edit">Update</button>
+        <button type="submit" name="action" value="delete">Delete</button>
+
+    </td>
+  </tr>
+  </form>
+  </tbody>
+</table>
+<script th:src="@{/edit.js}"></script>
+<footer th:insert="blocks/footer :: footer"></footer>
+</body>
+</html>
