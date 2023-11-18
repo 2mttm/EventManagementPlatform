@@ -30,7 +30,7 @@ public class WebSecurityConfig {
                         .requestMatchers("/about").permitAll()
                         .requestMatchers("/register").permitAll()
 
-                        .requestMatchers("/create").hasAnyRole("ADMIN", "EDITOR", "USER")
+                        .requestMatchers("/events/new").hasAnyRole("ADMIN", "EDITOR", "USER")
 
                         .requestMatchers("/admin/**").hasRole("ADMIN")
 

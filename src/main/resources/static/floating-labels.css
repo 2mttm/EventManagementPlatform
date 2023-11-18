@@ -1,0 +1,32 @@
+.form-floating>.form-control:focus~label,
+.form-floating>.form-control:not(:placeholder-shown)~label,
+.form-floating>.form-select~label {
+  position: absolute;
+  opacity: 1;
+  background-color: white;
+  transform: scale(.9) translateY(-0.8rem) translateX(0.6rem);
+  margin: 0;
+  padding-right: 5;
+  padding-left: 5;
+
+}
+.form-floating>.form-control~label,
+.form-floating>.form-control~label,
+.form-floating>.form-select~label {
+  transform: translateY(0.4rem) translateX(0.5rem);
+  transition: all 0.3s;
+  padding: 0;
+  height: 1.5rem;
+  background-color: white;
+
+  color: gray;
+}
+.form-floating>.form-control,
+.form-floating>.form-control-plaintext,
+.form-floating>.form-select{
+    height:calc(2.5rem + calc(var(--bs-border-width) * 2));
+    min-height:calc(2.5rem + calc(var(--bs-border-width) * 2));
+    line-height:1.25;
+
+  padding-top: 8px !important;
+}
