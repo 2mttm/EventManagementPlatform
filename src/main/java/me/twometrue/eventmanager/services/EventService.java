@@ -4,6 +4,7 @@ import me.twometrue.eventmanager.models.Event;
 import me.twometrue.eventmanager.models.EventRepository;
 import me.twometrue.eventmanager.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,7 +18,7 @@ public class EventService {
         this.eventRepository = eventRepository;
     }
 
-    public Event saveEvent(Event event){
+    public Event saveEvent(Event event) {
         if (event.getId() == null) {
             return eventRepository.save(event);
         }
@@ -42,7 +43,19 @@ public class EventService {
         return eventRepository.findAllByOrderBySubscribersDesc();
     }
 
-    public Event getEventById(Long id){
-        return eventRepository.findById(id).orElse(null);
+    public Event getEventById(Long id) {
+        Event event = eventRepository.findById(id).orElse(null);
+        if (event != null) {
+            addViews(event, 1);
+        }
+        return event;
+    }
+
+
+    private int addViews(Event event, int inc) {
+        int newViews = event.getViews() + inc;
+        event.setViews(newViews);
+        eventRepository.save(event);
+        return newViews;
     }
 }

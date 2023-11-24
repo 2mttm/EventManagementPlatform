@@ -23,14 +23,20 @@ public class Event {
     private LocalDateTime end;
     private int views;
     private int subscribers;
+    private boolean isFinished;
+    private String category;
 
-    public Event(String title, String description, String location, LocalDateTime start, LocalDateTime end, Long authorId) {
+    //add google maps
+
+    public Event(String title, String description, String category, String location, LocalDateTime start, LocalDateTime end, Long authorId) {
         this.authorId = authorId;
         this.title = title;
         this.description = description;
         this.location = location;
         this.start = start;
         this.end = end;
+        this.category = category;
+        this.isFinished = !end.isAfter(LocalDateTime.now());
     }
 
 }
