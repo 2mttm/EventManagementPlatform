@@ -36,12 +36,16 @@ public class WebSecurityConfig {
 
                         .anyRequest().permitAll())
 
-                        .formLogin(form -> form
-                                .loginPage("/login")
-                                .permitAll()
-                        )
-                        .logout(logout -> logout
-                                .permitAll());
+                .formLogin(form -> form
+                        .loginPage("/login")
+                        .permitAll()
+                )
+                .logout(logout -> logout
+                        .deleteCookies("JSESSIONID")
+                        .permitAll())
+                .rememberMe(remember -> remember
+                        .key("Event Management Platform")
+                        .alwaysRemember(true));
 
         return httpSecurity.build();
     }
