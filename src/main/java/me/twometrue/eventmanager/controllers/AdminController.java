@@ -43,6 +43,7 @@ public class AdminController {
                     roles.add(role);
                 }
             }
+            //TODO: change to saveUser()
             userService.editUser(userId, new User(name, username, roles));
         }
         return "redirect:/admin";

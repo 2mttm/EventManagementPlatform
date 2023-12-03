@@ -44,8 +44,8 @@ public class WebSecurityConfig {
                         .deleteCookies("JSESSIONID")
                         .permitAll())
                 .rememberMe(remember -> remember
-                        .key("Event Management Platform")
-                        .alwaysRemember(true));
+                        .rememberMeParameter("rememberMe")
+                        .key("Event Management Platform"));
 
         return httpSecurity.build();
     }

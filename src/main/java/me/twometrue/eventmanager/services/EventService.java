@@ -2,14 +2,16 @@ package me.twometrue.eventmanager.services;
 
 import me.twometrue.eventmanager.models.Event;
 import me.twometrue.eventmanager.models.EventRepository;
-import me.twometrue.eventmanager.models.User;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Sort;
+import org.springframework.scheduling.annotation.EnableScheduling;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
+@EnableScheduling
 public class EventService {
     private final EventRepository eventRepository;
 
@@ -19,20 +21,15 @@ public class EventService {
     }
 
     public Event saveEvent(Event event) {
-        if (event.getId() == null) {
-            return eventRepository.save(event);
-        }
-        Event eventFromDB = eventRepository.findById(event.getId()).orElse(null);
+        if (event.getStart() == null) event.setStart(LocalDateTime.now());
+        if (event.getEnd() == null) event.setEnd(LocalDateTime.now());
 
-        if (eventFromDB != null) {
-            return eventFromDB;
-        }
-        eventRepository.save(event);
-        return event;
+        event.setFinished(!event.getEnd().isAfter(LocalDateTime.now()));
+        return eventRepository.save(event);
     }
 
-    public List<Event> getAllEventsSortedByStartTime() {
-        return eventRepository.findAllByOrderByStartAsc();
+    public List<Event> getUpcoming() {
+        return eventRepository.findByIsFinishedOrderByStartAsc(false);
     }
 
     public List<Event> getAllEventsSortedByViews() {
@@ -57,5 +54,15 @@ public class EventService {
         event.setViews(newViews);
         eventRepository.save(event);
         return newViews;
+    }
+
+    @Scheduled(fixedDelay = 10000)
+    private void checkEventsStatuses() {
+        for (Event event : eventRepository.findByIsFinished(false)){
+            if (event.getEnd().isBefore(LocalDateTime.now())){
+                event.setFinished(true);
+                eventRepository.save(event);
+            }
+        }
     }
 }

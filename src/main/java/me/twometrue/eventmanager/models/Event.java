@@ -25,6 +25,7 @@ public class Event {
     private int subscribers;
     private boolean isFinished;
     private String category;
+    private String imageUrl;
 
     //add google maps
 

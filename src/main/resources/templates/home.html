@@ -1,9 +1,11 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security6" data-bs-theme="dark">
 <head>
     <title>Online Event Management Platform</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <link href="https://getbootstrap.com/docs/5.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+      <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
+    <link rel="stylesheet" href="/css/main.css">
+    <link rel="stylesheet" href="/css/eventCard.css">
     <style>
         .event-card {
             transition: transform 0.3s;
@@ -13,10 +15,11 @@
             cursor: pointer;
             transform: scale(1.1);
         }
+
     </style>
 </head>
 <body class="container" style="padding-top: 4.5rem;">
-    <header th:insert="blocks/header :: header"></header>
+    <header th:insert="~{blocks/header :: header}"></header>
 
     <div sec:authorize="hasRole('USER')">Text visible to user.</div>
     <div sec:authorize="hasRole('ADMIN')">Text visible to admin.</div>
@@ -24,7 +27,7 @@
 
     <p>Hello World!</p>
 
-    <h1 class="mt-4 mb-4">Список ивентов</h1>
+    <h1 class="mt-4 mb-4">Upcoming events</h1>
     <div class="row mb-3">
         <div class="col-12 mb-3" th:each="event : ${events}">
             <div class="card event-card" th:attr="onclick='location.href=\'/events/' + ${event.id} + '\''">
@@ -47,6 +50,8 @@
         </div>
     </div>
 
-    <footer th:insert="blocks/footer :: footer"></footer>
+    <div th:insert="~{blocks/eventCard :: events}"></div>
+
+    <footer th:insert="~{blocks/footer :: footer}"></footer>
 </body>
 </html>
