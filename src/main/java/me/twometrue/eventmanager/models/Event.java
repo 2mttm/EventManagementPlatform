@@ -26,6 +26,7 @@ public class Event {
     private boolean isFinished;
     private String category;
     private String imageUrl;
+    private String theme;
 
     //add google maps
 
