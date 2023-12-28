@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+<body>
+    <div  th:fragment="eventView">
+        <div class="d-flex">
+            <div class="d-flex flex-column me-3" style="max-width: 35%;">
+                <img class="rounded mb-3 card" th:src="${event.imageUrl}" alt="Event image">
+                <div id="map" class="rounded mb-3 card"></div>
+                <div class="card p-3">
+                    <div>Event location:</div>
+                    <div th:text="${event.location}"></div>
+                    <div th:value="${event.latitude}" th:text="${event.latitude}" id="latitude"></div>
+                    <div th:value="${event.longitude}" th:text="${event.longitude}" id="longitude"></div>
+                </div>
+
+            </div>
+            <div class="card">
+                <h2 th:text="${event.title}" class="text-center card-header"></h2>
+                <div th:utext="${#strings.replace(event.description, '&#10;','&lt;br&gt;')}" class="fs-4 text-justify p-3"></div>
+                <div class="card-footer d-flex justify-content-between mt-auto text-muted">
+                    <div>
+                        <div th:text="'Start: ' + ${#temporals.format(event.start, 'dd.MM.yyyy HH:mm')}"></div>
+                        <div class="float-end" th:text="'End: ' + ${#temporals.format(event.end, 'dd.MM.yyyy HH:mm')}"></div>
+                    </div>
+                    <div class="text-end">
+                        <div>Views: <span th:text="${event.views}"></span></div>
+                        <div>Author: <span th:text="${event.authorId}"></span></div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+
+        <th:block th:if="${#authorization.expression('hasRole(''EDITOR'')') or #authentication.principal.id == event.authorId}">
+            <a id="editButton" class="btn btn-primary m-2" href="?edit">Edit</a>
+            <a id="deleteButton" class="btn btn-danger m-2" href="?delete">Delete</a>
+        </th:block>
+    </div>
+</body>
+</html>

@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<body>
+<div class="container-fluid" th:fragment="eventEdit">
+    <div class="row">
+        <div class="col-lg-12 mb-5">
+            <form action="/events/new" method="post">
+                <div class="form-floating mb-4">
+                    <input name="title" type="text" class="form-control shadow-none" id="title" placeholder="" th:value="${event.title}">
+                    <label for="title" class="form-label">Title</label>
+                </div>
+                <div class="form-floating mb-4">
+                    <textarea name="description" class="form-control shadow-none" id="description" oninput='autoResize(this)' placeholder="" th:utext="${event.description}"></textarea>
+                    <label for="description" class="form-label">Description (html tags supported)</label>
+                </div>
+                <div class="form-floating mb-4">
+                    <input name="location" type="text" class="form-control shadow-none" id="location" placeholder="" th:value="${event.location}">
+                    <label for="location" class="form-label">Location</label>
+                    <div id="map" class="rounded"></div>
+                </div>
+                <div class="form-floating mb-4">
+                    <input name="imageUrl" type="text" class="form-control shadow-none" id="imageUrl" placeholder="" th:value="${event.imageUrl}">
+                    <label for="imageUrl" class="form-label">Promo Image Url</label>
+                </div>
+                <div class="form-floating mb-4">
+                    <select class="form-select" name="theme" id="theme" aria-label="Select event theme">
+                        <option value="red" th:selected="${event.theme == 'red'}">Red</option>
+                        <option value="green" th:selected="${event.theme == 'green'}">Green</option>
+                        <option value="yellow" th:selected="${event.theme == 'yellow'}">Yellow</option>
+                        <option value="blue" th:selected="${event.theme == 'blue'}">Blue</option>
+                    </select>
+                    <label for="theme" class="form-label">Select event theme</label>
+                </div>
+
+                <div class="input-group">
+                    <div class="form-floating mb-4">
+                        <input name="start" type="datetime-local" class="form-control active shadow-none" id="startDateTime" placeholder="" th:value="${event.start}">
+                        <label for="startDateTime" class="form-label">Start Date and Time</label>
+                    </div>
+                    <div class="form-floating mb-4">
+                        <input name="end" type="datetime-local" class="form-control active shadow-none" id="endDateTime" placeholder="" th:value="${event.end}">
+                        <label for="endDateTime" class="form-label">End Date and Time</label>
+                    </div>
+                </div>
+
+                <input type="hidden" name="authorId" th:value="${#authentication.principal.id}">
+                <input type="hidden" name="id" th:value="${event.id}">
+                <input type="hidden" name="latitude" id="latitude" th:value="${event.latitude}">
+                <input type="hidden" name="longitude" id="longitude" th:value="${event.longitude}">
+
+                <button type="submit" class="btn btn-outline-light">Save Event</button>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

@@ -30,15 +30,8 @@ public class EventService {
         if (event.getId() != null) {
             Optional<Event> savedEvent = eventRepository.findById(event.getId());
             if (savedEvent.isPresent()) {
-                savedEvent.get().setTitle(event.getTitle());
-                savedEvent.get().setDescription(event.getDescription());
-                savedEvent.get().setLocation(event.getLocation());
-                savedEvent.get().setImageUrl(event.getImageUrl());
-                savedEvent.get().setStart(event.getStart());
-                savedEvent.get().setEnd(event.getEnd());
-                savedEvent.get().setLatitude(event.getLatitude());
-                savedEvent.get().setLongitude(event.getLongitude());
-                return eventRepository.save(savedEvent.get());
+                event.setViews(savedEvent.get().getViews());
+                event.setSubscribers(savedEvent.get().getSubscribers());
             }
         }
 
