@@ -67,6 +67,7 @@ public class MainController {
         if (bindingResult.hasErrors()){
             return "event";
         }
+//        eventForm.setDescription(eventForm.getDescription().replace("\n", "<br>"));
         Event savedEvent = eventService.saveEvent(eventForm);
         redirectAttributes.addAttribute("id", savedEvent.getId());
         return "redirect:/events/{id}";

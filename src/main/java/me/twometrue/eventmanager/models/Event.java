@@ -17,6 +17,7 @@ public class Event {
     private Long id;
     private Long authorId;
     private String title;
+    @Column(length = 65555)
     private String description;
     private String location;
     private LocalDateTime start;
@@ -25,6 +26,7 @@ public class Event {
     private int subscribers;
     private boolean isFinished;
     private String category;
+    @Column(length = 65555)
     private String imageUrl;
     private String theme;
 

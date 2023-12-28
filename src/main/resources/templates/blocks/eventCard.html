@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security6">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security6" lang="en">
 <body>
 
 <!--An events list is needed for processing the next block-->
@@ -18,7 +18,7 @@
               <p th:text="${#temporals.format(event.start, 'dd.MM.yyyy HH:mm')}"></p>
             </div>
             <div class="card-bar"></div>
-            <p class="card-text" th:text="${#strings.length(event.description) &gt; 200} ? ${T(org.jsoup.Jsoup).parse(#strings.replace(#strings.substring(event.description, 0, 200), '&#10;', ' ')).text()} + '...' : ${T(org.jsoup.Jsoup).parse(#strings.replace(event.description, '&#10;', ' ')).text()}"></p>
+            <p class="card-text" th:text="${#strings.length(event.description) &gt; 255} ? ${T(org.jsoup.Jsoup).parse(#strings.replace(#strings.substring(event.description, 0, 252), '&#10;', ' ')).text()} + '...' : ${T(org.jsoup.Jsoup).parse(#strings.replace(event.description, '&#10;', ' ')).text()}"></p>
 
             <a class="" th:attr="href='/events/' + ${event.id}">More info</a>
           </div>
