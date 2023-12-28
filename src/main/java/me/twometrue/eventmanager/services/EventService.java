@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @EnableScheduling
@@ -25,6 +26,22 @@ public class EventService {
         if (event.getEnd() == null) event.setEnd(LocalDateTime.now());
 
         event.setFinished(!event.getEnd().isAfter(LocalDateTime.now()));
+
+        if (event.getId() != null) {
+            Optional<Event> savedEvent = eventRepository.findById(event.getId());
+            if (savedEvent.isPresent()) {
+                savedEvent.get().setTitle(event.getTitle());
+                savedEvent.get().setDescription(event.getDescription());
+                savedEvent.get().setLocation(event.getLocation());
+                savedEvent.get().setImageUrl(event.getImageUrl());
+                savedEvent.get().setStart(event.getStart());
+                savedEvent.get().setEnd(event.getEnd());
+                savedEvent.get().setLatitude(event.getLatitude());
+                savedEvent.get().setLongitude(event.getLongitude());
+                return eventRepository.save(savedEvent.get());
+            }
+        }
+
         return eventRepository.save(event);
     }
 

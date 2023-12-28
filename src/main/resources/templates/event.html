@@ -5,6 +5,11 @@
   <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
   <link rel="stylesheet" href="/css/eventPage.css">
+
+  <script src="https://polyfill.io/v3/polyfill.min.js?features=default"></script>
+<!--  <script>(g=>{var h,a,k,p="The Google Maps JavaScript API",c="google",l="importLibrary",q="__ib__",m=document,b=window;b=b[c]||(b[c]={});var d=b.maps||(b.maps={}),r=new Set,e=new URLSearchParams,u=()=>h||(h=new Promise(async(f,n)=>{await (a=m.createElement("script"));e.set("libraries",[...r]+"");for(k in g)e.set(k.replace(/[A-Z]/g,t=>"_"+t[0].toLowerCase()),g[k]);e.set("callback",c+".maps."+q);a.src=`https://maps.${c}apis.com/maps/api/js?`+e;d[q]=f;a.onerror=()=>h=n(Error(p+" could not load."));a.nonce=m.querySelector("script[nonce]")?.nonce||"";m.head.append(a)}));d[l]?console.warn(p+" only loads once. Ignoring:",g):d[l]=(f,...n)=>r.add(f)&&u().then(()=>d[l](f,...n))})-->
+<!--  ({key: "AIzaSyB41DRUbKWJHPxaFjMAwdrzWzbVKartNGg", v: "weekly"});</script>-->
+
 </head>
 <body class="container" style="padding-top: 4.5rem;">
 <header th:insert="~{blocks/header :: header}"></header>
@@ -20,12 +25,13 @@
             <label for="title" class="form-label">Title</label>
           </div>
           <div class="form-floating mb-4">
-            <textarea name="description" class="form-control shadow-none" id="description" style="height:100px;" placeholder="" th:utext="${event.description}"></textarea>
+            <textarea name="description" class="form-control shadow-none" id="description" oninput='autoResize(this)' placeholder="" th:utext="${event.description}"></textarea>
             <label for="description" class="form-label">Description (html tags supported)</label>
           </div>
           <div class="form-floating mb-4">
             <input name="location" type="text" class="form-control shadow-none" id="location" placeholder="" th:value="${event.location}">
             <label for="location" class="form-label">Location</label>
+            <div id="map" class="rounded"></div>
           </div>
           <div class="form-floating mb-4">
             <input name="imageUrl" type="text" class="form-control shadow-none" id="imageUrl" placeholder="" th:value="${event.imageUrl}">
@@ -54,6 +60,9 @@
 
           <input type="hidden" name="authorId" th:value="${#authentication.principal.id}">
           <input type="hidden" name="id" th:value="${event.id}">
+          <input type="hidden" name="latitude" id="latitude" th:value="${event.latitude}">
+          <input type="hidden" name="longitude" id="longitude" th:value="${event.longitude}">
+
           <button type="submit" class="btn btn-outline-light">Save Event</button>
         </form>
       </div>
@@ -62,20 +71,47 @@
 </div>
 
 <div th:unless="${edit}">
-  <h2 th:text="${event.title}" class="text-center"></h2>
-  <div th:utext="${#strings.replace(event.description, '&#10;','&lt;br&gt;')}" class="fs-4 text-justify"></div>
-  <div th:text="${event.location}"></div>
-  <div th:text="${event.start}"></div>
-  <div th:text="${event.end}"></div>
-  <div>Views: <span th:text="${event.views}"></span></div>
-  <div>Author: <span th:text="${event.authorId}"></span></div>
+  <div class="d-flex">
+    <div class="d-flex flex-column me-3" style="max-width: 35%;">
+      <img class="rounded mb-3 card" th:src="${event.imageUrl}" alt="Event image">
+      <div id="map" class="rounded mb-3 card"></div>
+      <div class="card p-3">
+        <div>Event location:</div>
+        <div th:text="${event.location}"></div>
+        <div th:value="${event.latitude}" th:text="${event.latitude}" id="latitude"></div>
+        <div th:value="${event.longitude}" th:text="${event.longitude}" id="longitude"></div>
+      </div>
+
+    </div>
+    <div class="card">
+      <h2 th:text="${event.title}" class="text-center card-header"></h2>
+      <div th:utext="${#strings.replace(event.description, '&#10;','&lt;br&gt;')}" class="fs-4 text-justify p-3"></div>
+      <div class="card-footer d-flex justify-content-between mt-auto text-muted">
+        <div>
+          <div th:text="'Start: ' + ${#temporals.format(event.start, 'dd.MM.yyyy HH:mm')}"></div>
+          <div class="float-end" th:text="'End: ' + ${#temporals.format(event.end, 'dd.MM.yyyy HH:mm')}"></div>
+        </div>
+        <div class="text-end">
+          <div>Views: <span th:text="${event.views}"></span></div>
+          <div>Author: <span th:text="${event.authorId}"></span></div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+
 
   <th:block th:if="${#authorization.expression('hasRole(''EDITOR'')') or #authentication.principal.id == event.authorId}">
-    <a id="editButton" class="btn btn-primary" href="?edit">Edit</a>
+    <a id="editButton" class="btn btn-primary m-2" href="?edit">Edit</a>
+    <a id="deleteButton" class="btn btn-danger m-2" href="?delete">Delete</a>
   </th:block>
 </div>
 
 <footer th:insert="~{blocks/footer :: footer}"></footer>
 
+<script async defer
+        src="https://maps.googleapis.com/maps/api/js?key=AIzaSyB41DRUbKWJHPxaFjMAwdrzWzbVKartNGg&callback=initMap">
+</script>
+<script src="/js/eventPage.js"></script>
 </body>
 </html>

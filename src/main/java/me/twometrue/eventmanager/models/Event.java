@@ -30,7 +30,8 @@ public class Event {
     private String imageUrl;
     private String theme;
 
-    //add google maps
+    private double latitude;
+    private double longitude;
 
     public Event(String title, String description, String category, String location, LocalDateTime start, LocalDateTime end, Long authorId) {
         this.authorId = authorId;
