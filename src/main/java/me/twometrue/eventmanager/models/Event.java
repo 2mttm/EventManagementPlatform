@@ -1,11 +1,12 @@
 package me.twometrue.eventmanager.models;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
+
 @Data
 @Entity
 @Table(name = "events")
@@ -23,7 +24,6 @@ public class Event {
     private LocalDateTime start;
     private LocalDateTime end;
     private int views;
-    private int subscribers;
     private boolean isFinished;
     private String category;
     @Column(length = 65555)
@@ -32,6 +32,11 @@ public class Event {
 
     private double latitude;
     private double longitude;
+
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private Set<User> users = new HashSet<>();
 
     public Event(String title, String description, String category, String location, LocalDateTime start, LocalDateTime end, Long authorId) {
         this.authorId = authorId;
@@ -42,6 +47,15 @@ public class Event {
         this.end = end;
         this.category = category;
         this.isFinished = !end.isAfter(LocalDateTime.now());
+    }
+    public void addUser(User user) {
+        users.add(user);
+        user.getEvents().add(this); // Обновляем коллекцию событий у пользователя
+    }
+
+    public void removeUser(User user) {
+        users.remove(user);
+        user.getEvents().remove(this); // Удаляем событие из коллекции у пользователя
     }
 
 }

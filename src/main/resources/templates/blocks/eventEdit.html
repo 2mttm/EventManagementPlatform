@@ -14,9 +14,9 @@
                     <label for="description" class="form-label">Description (html tags supported)</label>
                 </div>
                 <div class="form-floating mb-4">
-                    <input name="location" type="text" class="form-control shadow-none" id="location" placeholder="" th:value="${event.location}">
+                    <input name="location" type="text" class="form-control shadow-none rounded-bottom-0" id="location" placeholder="" th:value="${event.location}">
                     <label for="location" class="form-label">Location</label>
-                    <div id="map" class="rounded"></div>
+                    <div id="map" class="rounded-bottom-2"></div>
                 </div>
                 <div class="form-floating mb-4">
                     <input name="imageUrl" type="text" class="form-control shadow-none" id="imageUrl" placeholder="" th:value="${event.imageUrl}">

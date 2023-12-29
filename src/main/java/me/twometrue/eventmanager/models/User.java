@@ -2,9 +2,7 @@ package me.twometrue.eventmanager.models;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
@@ -31,7 +29,12 @@ public class User implements UserDetails {
     private LocalDate birthday;
     private String password;
     @ManyToMany(fetch = FetchType.EAGER)
+    @EqualsAndHashCode.Exclude
     private Set<Role> roles;
+    @ManyToMany(mappedBy = "users", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private Set<Event> events = new HashSet<>();
     @Transient
     private int age;
 
@@ -47,9 +50,9 @@ public class User implements UserDetails {
         this.roles = roles;
     }
 
-    public int getAge() {
-        return Period.between(this.birthday, LocalDate.now()).getYears();
-    }
+//    public int getAge() {
+//        return Period.between(this.birthday, LocalDate.now()).getYears();
+//    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -74,5 +77,14 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+    public void addEvent(Event event) {
+        events.add(event);
+        event.getUsers().add(this); // Обновляем коллекцию пользователей у события
+    }
+
+    public void removeEvent(Event event) {
+        events.remove(event);
+        event.getUsers().remove(this); // Удаляем пользователя из коллекции у события
     }
 }

@@ -1,5 +1,6 @@
 package me.twometrue.eventmanager.services;
 
+import jakarta.transaction.Transactional;
 import me.twometrue.eventmanager.models.Event;
 import me.twometrue.eventmanager.models.EventRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +32,7 @@ public class EventService {
             Optional<Event> savedEvent = eventRepository.findById(event.getId());
             if (savedEvent.isPresent()) {
                 event.setViews(savedEvent.get().getViews());
-                event.setSubscribers(savedEvent.get().getSubscribers());
+                event.setUsers(savedEvent.get().getUsers());
             }
         }
 
@@ -47,13 +48,13 @@ public class EventService {
     }
 
     public List<Event> getAllEventsSortedBySubscribers() {
-        return eventRepository.findAllByOrderBySubscribersDesc();
+        return eventRepository.findAllSortedByUsersCount();
     }
 
-    public Event getEventById(Long id) {
+    public Event getEventById(Long id, int addViews) {
         Event event = eventRepository.findById(id).orElse(null);
         if (event != null) {
-            addViews(event, 1);
+            addViews(event, addViews);
         }
         return event;
     }
