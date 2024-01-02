@@ -8,10 +8,9 @@
 <body class="container" style="padding-top: 4.5rem;">
 <header th:insert="~{blocks/header :: header}"></header>
 
-<div sec:authorize="isAuthenticated()">Authenticated username: <span sec:authentication="principal.username"></span></div>
 <h1>List of Users</h1>
 
-<table class="table table-light">
+<table class="table">
   <thead class="">
     <th scope="col">ID</th>
     <th scope="col">Name</th>
@@ -35,8 +34,8 @@
     <td>
 
         <input type="hidden" name="userId" th:value="${user.id}"/>
-        <button type="submit" name="action" value="edit">Update</button>
-        <button type="submit" name="action" value="delete">Delete</button>
+        <button type="submit" name="action" value="edit" class="btn btn-primary lh-1">Update</button>
+        <button type="submit" name="action" value="delete" class="btn btn-danger lh-1">Delete</button>
 
     </td>
   </tr>

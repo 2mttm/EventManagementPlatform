@@ -1,5 +1,5 @@
 <!DOCTYPE HTML>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security6" data-bs-theme="dark" lang="en">
+<html xmlns:th="http://www.thymeleaf.org" data-bs-theme="dark" lang="en">
 <head>
     <title>Online Event Management Platform</title>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
@@ -10,7 +10,7 @@
 <body class="container" style="padding-top: 4.5rem;">
     <header th:insert="~{blocks/header :: header}"></header>
 
-    <h1 class="mt-4 mb-4">Upcoming events</h1>
+    <h1 class="mb-4 text-center">Upcoming events</h1>
     <div th:insert="~{blocks/eventCard :: events}"></div>
 
     <footer th:insert="~{blocks/footer :: footer}"></footer>

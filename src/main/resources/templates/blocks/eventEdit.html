@@ -1,3 +1,4 @@
+<!--/*@thymesVar id="event" type="me.twometrue.eventmanager.models.Event"*/-->
 <!DOCTYPE html>
 <html lang="en">
 <body>
@@ -8,6 +9,10 @@
                 <div class="form-floating mb-4">
                     <input name="title" type="text" class="form-control shadow-none" id="title" placeholder="" th:value="${event.title}">
                     <label for="title" class="form-label">Title</label>
+                </div>
+                <div class="form-floating mb-4">
+                    <input name="category" type="text" class="form-control shadow-none" id="category" placeholder="" th:value="${event.category}">
+                    <label for="category" class="form-label">Category</label>
                 </div>
                 <div class="form-floating mb-4">
                     <textarea name="description" class="form-control shadow-none" id="description" oninput='autoResize(this)' placeholder="" th:utext="${event.description}"></textarea>

@@ -50,12 +50,12 @@ public class Event {
     }
     public void addUser(User user) {
         users.add(user);
-        user.getEvents().add(this); // Обновляем коллекцию событий у пользователя
+        user.getEvents().add(this);
     }
 
     public void removeUser(User user) {
         users.remove(user);
-        user.getEvents().remove(this); // Удаляем событие из коллекции у пользователя
+        user.getEvents().remove(this);
     }
     public boolean updateFinished(){
         this.isFinished = this.end.isBefore(LocalDateTime.now());
