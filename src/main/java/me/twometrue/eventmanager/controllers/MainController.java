@@ -5,7 +5,6 @@ import me.twometrue.eventmanager.models.Event;
 import me.twometrue.eventmanager.models.User;
 import me.twometrue.eventmanager.services.EventService;
 import me.twometrue.eventmanager.services.UserService;
-import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -15,11 +14,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import java.security.Principal;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 @Controller
 public class MainController {
@@ -35,15 +31,23 @@ public class MainController {
         return "home";
     }
 
+    @GetMapping("/profile")
+    public String profile(Model model, @AuthenticationPrincipal UserDetails userDetails){
+        User user = userService.findUserByEmail(userDetails.getUsername());
+        model.addAttribute("user", user);
+        return "profile";
+    }
+
     @GetMapping("/popular")
     public String popular(Model model) {
+
         List<Event> events = eventService.getAllEventsSortedByViews();
         model.addAttribute("events", events);
         return "home";
     }
 
     @GetMapping("/about")
-    public String about(){
+    public String about() {
         return "about";
     }
 
@@ -51,10 +55,11 @@ public class MainController {
     public String getEventById(@PathVariable Long id, Model model, @RequestParam Map<String, String> params, @AuthenticationPrincipal UserDetails userDetails) {
         Event event = eventService.getEventById(id, 1);
         User user = userService.findUserByEmail(userDetails.getUsername());
+        User author = userService.findUserById(event.getAuthorId());
         model.addAttribute("event", event);
         model.addAttribute("edit", params.get("edit"));
         model.addAttribute("subscribed", event.getUsers().contains(user));
-        System.out.println(model.getAttribute("subscribed"));
+        model.addAttribute("author", author);
         return "event";
     }
 
@@ -64,21 +69,18 @@ public class MainController {
         Event event = eventService.saveEvent(eventForm);
         model.addAttribute("event", event);
 
-        redirectAttributes.addAttribute("id", eventForm.getId());
+        redirectAttributes.addAttribute("id", event.getId());
         return "redirect:/events/{id}";
     }
 
     @GetMapping("/events/{id}/toggleSubscription")
-    public String toggleSubscription(@PathVariable Long id, Model model, @RequestParam Map<String, String> params, @AuthenticationPrincipal UserDetails userDetails){
+    public String toggleSubscription(@PathVariable Long id, Model model, @RequestParam Map<String, String> params, @AuthenticationPrincipal UserDetails userDetails) {
         Event event = eventService.getEventById(id, 0);
-        System.out.println(event.getUsers());
         User user = userService.findUserByEmail(userDetails.getUsername());
-        if (event.getUsers().contains(user)){
+        if (event.getUsers().contains(user)) {
             event.removeUser(user);
-            System.out.println("User " + user.getUsername() + " unsubscribed from event " + event.getId());
         } else {
             event.addUser(user);
-            System.out.println("User " + user.getUsername() + " subscribed to event " + event.getId());
         }
         eventService.saveEvent(event);
         return "redirect:/events/{id}";
@@ -93,8 +95,8 @@ public class MainController {
     }
 
     @PostMapping("/events/new")
-    public String createEvent(@ModelAttribute("eventForm") @Valid Event eventForm, BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes){
-        if (bindingResult.hasErrors()){
+    public String createEvent(@ModelAttribute("eventForm") @Valid Event eventForm, BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes) {
+        if (bindingResult.hasErrors()) {
             return "event";
         }
         Event savedEvent = eventService.saveEvent(eventForm);

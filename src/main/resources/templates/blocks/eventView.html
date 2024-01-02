@@ -19,7 +19,7 @@
                 <div class="card-header d-flex justify-content-between">
                     <h2 th:text="${event.title}" class="text-center flex-fill mb-0"></h2>
                     <th:block sec:authorize="isAuthenticated()">
-                        <a type="button" th:text="${subscribed ? 'Unsubscribe' : 'Subscribe'}" th:href="${event.id} + '/toggleSubscription'" class="btn btn-outline-light me-2"></a>
+                        <a type="button" th:text="${subscribed ? 'Unsubscribe' : 'Subscribe'}" th:classappend="${subscribed} ? btn-outline-danger : btn-outline-success" th:href="${event.id} + '/toggleSubscription'" class="btn me-2"></a>
                         <div class="btn-group" th:if="${#authorization.expression('hasRole(''EDITOR'')') or #authentication.principal.id == event.authorId}">
                             <a type="button" class="btn btn-outline-primary" href="?edit">Edit</a>
                             <a type="button" class="btn btn-outline-danger" href="?delete">Delete</a>
@@ -35,17 +35,13 @@
                     </div>
                     <div class="text-end">
                         <div>Views: <span th:text="${event.views}"></span></div>
-                        <div>Author: <span th:text="${event.authorId}"></span></div>
+                        <div>Author: <span th:text="${author.username}"></span></div>
                     </div>
 
                 </div>
             </div>
         </div>
 
-<!--        <th:block th:if="${#authorization.expression('isAuthenticated()') and (#authorization.expression('hasRole(''EDITOR'')') or #authentication.principal.id == event.authorId)}">-->
-<!--            <a id="editButton" class="btn btn-primary m-2" href="?edit">Edit</a>-->
-<!--            <a id="deleteButton" class="btn btn-danger m-2" href="?delete">Delete</a>-->
-<!--        </th:block>-->
     </div>
 </body>
 </html>

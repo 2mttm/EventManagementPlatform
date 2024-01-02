@@ -57,5 +57,26 @@ public class Event {
         users.remove(user);
         user.getEvents().remove(this); // Удаляем событие из коллекции у пользователя
     }
+    public boolean updateFinished(){
+        this.isFinished = this.end.isBefore(LocalDateTime.now());
+        return this.isFinished;
+    }
+    public Event update(Event other){
+        this.authorId = other.getAuthorId();
+        this.title = other.getTitle();
+        this.description = other.getDescription();
+        this.location = other.getLocation();
+        this.start = other.getStart();
+        this.end = other.getEnd();
+        this.category = other.getCategory();
+        this.imageUrl = other.getImageUrl();
+        this.theme = other.getTheme();
+        this.latitude = other.getLatitude();
+        this.longitude = other.getLongitude();
+
+        updateFinished();
+
+        return this;
+    }
 
 }

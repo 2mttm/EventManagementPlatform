@@ -1,9 +1,11 @@
+<!--/*@thymesVar id="event" type="me.twometrue.eventmanager.models.Event"*/-->
 <!DOCTYPE HTML>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security6" lang="en">
 <body>
 
 <!--An events list is needed for processing the next block-->
 <div class="d-flex flex-column" th:fragment="events">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css">
     <div class="card shadow border-0 mb-4" th:fragment="eventCard" th:each="event, eventStat : ${events}" th:classappend="${(eventStat.index % 2 == 1 ? 'card-reversed ' : '') + (event.theme)}">
       <div class="row g-0">
         <div class="col-3 card-image">
@@ -20,7 +22,27 @@
             <div class="card-bar"></div>
             <p class="card-text" th:text="${#strings.length(event.description) &gt; 255} ? ${T(org.jsoup.Jsoup).parse(#strings.replace(#strings.substring(event.description, 0, 252), '&#10;', ' ')).text()} + '...' : ${T(org.jsoup.Jsoup).parse(#strings.replace(event.description, '&#10;', ' ')).text()}"></p>
 
-            <a class="" th:attr="href='/events/' + ${event.id}">More info</a>
+            <div class="card-footer-custom d-flex justify-content-between">
+
+              <a class="btn btn-primary" th:attr="href='/events/' + ${event.id}">More info</a>
+
+              <div class="card-tagbox d-flex lh-1 gap-3 fs-6 align-self-center">
+                <div class="card-tag">
+                  <i class="bi bi-tags"></i>
+                  <div class="card-tag-text d-inline" th:text="${event.category}"></div>
+                </div>
+                <div class="card-tag">
+                  <i class="bi bi-eye"></i>
+                  <div class="card-tag-text d-inline" th:text="${event.views}"></div>
+                </div>
+                <div class="card-tag">
+                  <i class="bi bi-people"></i>
+                  <div class="card-tag-text d-inline" th:text="${event.users.size()}"></div>
+                </div>
+              </div>
+
+            </div>
+
           </div>
         </div>
       </div>
@@ -29,27 +51,27 @@
 
 </div>
 
-<div class="row mb-3" >
-  <div class="col-12 mb-3" th:each="event : ${events}">
-    <div class="card event-card" th:attr="onclick='location.href=\'/events/' + ${event.id} + '\''">
-      <div class="card-body">
-        <h5 class="card-title" th:text="${event.title}"></h5>
-        <h6 class="card-subtitle mb-2 text-muted" th:text="${event.location}"></h6>
-        <p class="card-text" th:text="${#strings.length(event.description) &gt; 200} ? ${T(org.jsoup.Jsoup).parse(#strings.replace(#strings.substring(event.description, 0, 200), '&#10;', ' ')).text()} + '...' : ${T(org.jsoup.Jsoup).parse(#strings.replace(event.description, '&#10;', ' ')).text()}"></p>
-        <div class="d-flex justify-content-between">
-          <small class="text-muted">
-            <span th:text="'Start: ' + ${#temporals.format(event.start, 'dd.MM.yyyy HH:mm')}"></span><br>
-            <span class="float-end" th:text="'End: ' + ${#temporals.format(event.end, 'dd.MM.yyyy HH:mm')}"></span>
-          </small>
-          <small class="text-muted">
-            <span class="float-end" th:text="'Views: ' + ${event.views}"></span><br>
-            <span th:text="'Subscribers: ' + ${event.subscribers}"></span>
-          </small>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
+<!--<div class="row mb-3" >-->
+<!--  <div class="col-12 mb-3" th:each="event : ${events}">-->
+<!--    <div class="card event-card" th:attr="onclick='location.href=\'/events/' + ${event.id} + '\''">-->
+<!--      <div class="card-body">-->
+<!--        <h5 class="card-title" th:text="${event.title}"></h5>-->
+<!--        <h6 class="card-subtitle mb-2 text-muted" th:text="${event.location}"></h6>-->
+<!--        <p class="card-text" th:text="${#strings.length(event.description) &gt; 200} ? ${T(org.jsoup.Jsoup).parse(#strings.replace(#strings.substring(event.description, 0, 200), '&#10;', ' ')).text()} + '...' : ${T(org.jsoup.Jsoup).parse(#strings.replace(event.description, '&#10;', ' ')).text()}"></p>-->
+<!--        <div class="d-flex justify-content-between">-->
+<!--          <small class="text-muted">-->
+<!--            <span th:text="'Start: ' + ${#temporals.format(event.start, 'dd.MM.yyyy HH:mm')}"></span><br>-->
+<!--            <span class="float-end" th:text="'End: ' + ${#temporals.format(event.end, 'dd.MM.yyyy HH:mm')}"></span>-->
+<!--          </small>-->
+<!--          <small class="text-muted">-->
+<!--            <span class="float-end" th:text="'Views: ' + ${event.views}"></span><br>-->
+<!--            <span th:text="'Subscribers: ' + ${event.subscribers}"></span>-->
+<!--          </small>-->
+<!--        </div>-->
+<!--      </div>-->
+<!--    </div>-->
+<!--  </div>-->
+<!--</div>-->
 
 </body>
 </html>

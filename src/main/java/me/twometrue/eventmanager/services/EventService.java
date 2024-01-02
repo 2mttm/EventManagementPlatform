@@ -1,6 +1,5 @@
 package me.twometrue.eventmanager.services;
 
-import jakarta.transaction.Transactional;
 import me.twometrue.eventmanager.models.Event;
 import me.twometrue.eventmanager.models.EventRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,8 +30,7 @@ public class EventService {
         if (event.getId() != null) {
             Optional<Event> savedEvent = eventRepository.findById(event.getId());
             if (savedEvent.isPresent()) {
-                event.setViews(savedEvent.get().getViews());
-                event.setUsers(savedEvent.get().getUsers());
+                return eventRepository.save(savedEvent.get().update(event));
             }
         }
 
@@ -66,13 +64,16 @@ public class EventService {
         eventRepository.save(event);
         return newViews;
     }
-
-    @Scheduled(fixedDelay = 10000)
-    private void checkEventsStatuses() {
-        for (Event event : eventRepository.findByIsFinished(false)){
-            if (event.getEnd().isBefore(LocalDateTime.now())){
-                event.setFinished(true);
-                eventRepository.save(event);
+    private void finishEvent(Event event){
+        event.setFinished(true);
+//        event.setUsers(null);
+        eventRepository.save(event);
+    }
+    @Scheduled(fixedDelay = 30000)
+    private void updateFinishedEvents() {
+        for (Event event : eventRepository.findByIsFinished(false)) {
+            if (event.getEnd().isBefore(LocalDateTime.now())) {
+                finishEvent(event);
             }
         }
     }
