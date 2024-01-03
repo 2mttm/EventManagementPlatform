@@ -16,6 +16,7 @@ public class Event {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    //add onetomany
     private Long authorId;
     private String title;
     @Column(length = 65555)
@@ -37,6 +38,11 @@ public class Event {
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private Set<User> users = new HashSet<>();
+
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "event")
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private Set<Comment> comments = new HashSet<>();
 
     public Event(String title, String description, String category, String location, LocalDateTime start, LocalDateTime end, Long authorId) {
         this.authorId = authorId;

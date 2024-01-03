@@ -59,6 +59,7 @@ public class MainController {
         model.addAttribute("event", event);
         model.addAttribute("edit", params.get("edit"));
         model.addAttribute("subscribed", event.getUsers().contains(user));
+        model.addAttribute("user", user);
         model.addAttribute("author", author);
         return "event";
     }

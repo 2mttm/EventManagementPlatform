@@ -22,6 +22,7 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private String imageSrc;
     @Size(min = 3, message = "Minimum 3 symbols")
     private String name;
     @Column(name = "username", unique = true)
@@ -37,6 +38,11 @@ public class User implements UserDetails {
     private Set<Event> events = new HashSet<>();
     @Transient
     private int age;
+
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "user")
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private Set<Comment> comments = new HashSet<>();
 
     public User(String name, String username, LocalDate birthday) {
         this.name = name;
