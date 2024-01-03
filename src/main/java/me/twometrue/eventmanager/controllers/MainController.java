@@ -53,14 +53,14 @@ public class MainController {
 
     @GetMapping("/events/{id}")
     public String getEventById(@PathVariable Long id, Model model, @RequestParam Map<String, String> params, @AuthenticationPrincipal UserDetails userDetails) {
-        Event event = eventService.getEventById(id, 1);
-        User user = userService.findUserByEmail(userDetails.getUsername());
-        User author = userService.findUserById(event.getAuthorId());
+        Event event = eventService.findEventById(id, 1);
+        System.out.println(event);
+
         model.addAttribute("event", event);
         model.addAttribute("edit", params.get("edit"));
-        model.addAttribute("subscribed", event.getUsers().contains(user));
-        model.addAttribute("user", user);
-        model.addAttribute("author", author);
+        model.addAttribute("subscribed", event.getSubscribers().contains(userDetails));
+        model.addAttribute("user", userDetails);
+
         return "event";
     }
 
@@ -76,9 +76,9 @@ public class MainController {
 
     @GetMapping("/events/{id}/toggleSubscription")
     public String toggleSubscription(@PathVariable Long id, Model model, @RequestParam Map<String, String> params, @AuthenticationPrincipal UserDetails userDetails) {
-        Event event = eventService.getEventById(id, 0);
+        Event event = eventService.findEventById(id, 0);
         User user = userService.findUserByEmail(userDetails.getUsername());
-        if (event.getUsers().contains(user)) {
+        if (event.getSubscribers().contains(user)) {
             event.removeUser(user);
         } else {
             event.addUser(user);

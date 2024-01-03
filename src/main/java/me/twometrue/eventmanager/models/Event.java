@@ -16,8 +16,8 @@ public class Event {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    //add onetomany
-    private Long authorId;
+    @ManyToOne
+    private User author;
     private String title;
     @Column(length = 65555)
     private String description;
@@ -34,18 +34,18 @@ public class Event {
     private double latitude;
     private double longitude;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToMany(mappedBy="subscriptions")
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    private Set<User> users = new HashSet<>();
+    private Set<User> subscribers = new HashSet<>();
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "event")
+    @OneToMany(mappedBy = "event")
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private Set<Comment> comments = new HashSet<>();
 
-    public Event(String title, String description, String category, String location, LocalDateTime start, LocalDateTime end, Long authorId) {
-        this.authorId = authorId;
+    public Event(String title, String description, String category, String location, LocalDateTime start, LocalDateTime end, User author) {
+        this.author = author;
         this.title = title;
         this.description = description;
         this.location = location;
@@ -55,20 +55,20 @@ public class Event {
         this.isFinished = !end.isAfter(LocalDateTime.now());
     }
     public void addUser(User user) {
-        users.add(user);
-        user.getEvents().add(this);
+        subscribers.add(user);
+        user.getSubscriptions().add(this);
     }
 
     public void removeUser(User user) {
-        users.remove(user);
-        user.getEvents().remove(this);
+        subscribers.remove(user);
+        user.getSubscriptions().remove(this);
     }
     public boolean updateFinished(){
         this.isFinished = this.end.isBefore(LocalDateTime.now());
         return this.isFinished;
     }
     public Event update(Event other){
-        this.authorId = other.getAuthorId();
+        this.author = other.getAuthor();
         this.title = other.getTitle();
         this.description = other.getDescription();
         this.location = other.getLocation();

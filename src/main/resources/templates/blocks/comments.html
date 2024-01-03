@@ -11,7 +11,7 @@
     <!--/*@thymesVar id="comment" type="me.twometrue.eventmanager.models.Comment"*/-->
 
     <form class="d-flex gap-3" method="post" th:action="${event.id} + '/comment'">
-        <img th:src="${user.imageSrc}" width="50" class="rounded-circle">
+        <img th:src="${user.imageSrc}" width="50" class="rounded-circle" onerror="this.onerror=null;this.src='/images/placeholder.jpg';">
         <input type="text" class="form-control" placeholder="Enter your comment..." id="content" name="content">
 
         <input type="hidden" name="user" th:value="${user.id}">
@@ -23,8 +23,8 @@
         <div th:if="${#lists.size(event.comments) == 0}" class="text-muted">
             No comments yet! Be the first to send a comment!
         </div>
-        <div class="d-flex p-3" th:if="${#lists.size(event.comments) > 0}" th:each="comment : ${event.comments}">
-            <img th:src="${comment.user.imageSrc}" width="40" height="40" class="rounded-circle mr-3">
+        <div class="d-flex p-3 gap-2" th:if="${#lists.size(event.comments) > 0}" th:each="comment : ${event.comments}">
+            <img th:src="${comment.user.imageSrc}" width="45" height="45" class="rounded-circle mr-3" onerror="this.onerror=null;this.src='/images/placeholder.jpg';">
 
             <div class="d-flex flex-column w-100">
                 <div class="d-flex gap-3 text-muted">
@@ -33,7 +33,7 @@
 
                     <small th:text="${#temporals.format(comment.creationTime, 'dd.MM.yyyy HH:mm')}" class="ms-auto"></small>
                 </div>
-                <p class="text-justify comment-text mb-0" th:text="${comment.content}"></p>
+                <p class="text-justify text-break" th:text="${comment.content}"></p>
             </div>
 
 

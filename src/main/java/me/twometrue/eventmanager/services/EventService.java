@@ -1,11 +1,14 @@
 package me.twometrue.eventmanager.services;
 
+import jakarta.servlet.http.HttpServletRequest;
 import me.twometrue.eventmanager.models.Event;
 import me.twometrue.eventmanager.models.EventRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.servlet.ModelAndView;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -49,7 +52,7 @@ public class EventService {
         return eventRepository.findAllSortedByUsersCount();
     }
 
-    public Event getEventById(Long id, int addViews) {
+    public Event findEventById(Long id, int addViews) {
         Event event = eventRepository.findById(id).orElse(null);
         if (event != null) {
             addViews(event, addViews);
@@ -61,7 +64,7 @@ public class EventService {
     private int addViews(Event event, int inc) {
         int newViews = event.getViews() + inc;
         event.setViews(newViews);
-        eventRepository.save(event);
+//        eventRepository.save(event);
         return newViews;
     }
     private void finishEvent(Event event){
@@ -69,7 +72,7 @@ public class EventService {
 //        event.setUsers(null);
         eventRepository.save(event);
     }
-    @Scheduled(fixedDelay = 30000)
+//    @Scheduled(fixedDelay = 30000)
     private void updateFinishedEvents() {
         for (Event event : eventRepository.findByIsFinished(false)) {
             if (event.getEnd().isBefore(LocalDateTime.now())) {
@@ -77,4 +80,15 @@ public class EventService {
             }
         }
     }
+
+//    @ExceptionHandler(Exception.class)
+//    public ModelAndView handleError(HttpServletRequest req, Exception ex) {
+//        System.out.println("Request: " + req.getRequestURL() + " raised " + ex);
+//
+//        ModelAndView mav = new ModelAndView();
+//        mav.addObject("exception", ex);
+//        mav.addObject("url", req.getRequestURL());
+//        mav.setViewName("home");
+//        return mav;
+//    }
 }

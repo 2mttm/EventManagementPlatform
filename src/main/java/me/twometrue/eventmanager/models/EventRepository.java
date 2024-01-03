@@ -10,6 +10,6 @@ public interface EventRepository extends JpaRepository<Event, Long> {
     List<Event> findByIsFinished(boolean isFinished);
     List<Event> findAllByOrderByViewsDesc();
 
-    @Query("SELECT e FROM Event e LEFT JOIN e.users u GROUP BY e.id ORDER BY COUNT(u) DESC")
+    @Query("SELECT e FROM Event e LEFT JOIN e.subscribers u GROUP BY e.id ORDER BY COUNT(u) DESC")
     List<Event> findAllSortedByUsersCount();
 }

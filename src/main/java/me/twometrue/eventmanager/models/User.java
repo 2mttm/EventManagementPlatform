@@ -28,18 +28,26 @@ public class User implements UserDetails {
     @Column(name = "username", unique = true)
     private String username;
     private LocalDate birthday;
-    private String password;
-    @ManyToMany(fetch = FetchType.EAGER)
-    @EqualsAndHashCode.Exclude
-    private Set<Role> roles;
-    @ManyToMany(mappedBy = "users", fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @EqualsAndHashCode.Exclude
     @ToString.Exclude
-    private Set<Event> events = new HashSet<>();
+    private String password;
     @Transient
     private int age;
 
-    @OneToMany(fetch = FetchType.EAGER, mappedBy = "user")
+    @ManyToMany(fetch = FetchType.EAGER)
+    @EqualsAndHashCode.Exclude
+    private Set<Role> roles;
+
+    @ManyToMany(cascade = CascadeType.ALL)
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private Set<Event> subscriptions = new HashSet<>();
+
+    @OneToMany(mappedBy = "author")
+    @EqualsAndHashCode.Exclude
+    @ToString.Exclude
+    private Set<Event> events = new HashSet<>();
+
+    @OneToMany(mappedBy = "user")
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private Set<Comment> comments = new HashSet<>();
@@ -50,15 +58,18 @@ public class User implements UserDetails {
         this.birthday = birthday;
     }
 
-    public User(String name, String username, Set<Role> roles){
+    public User(String name, String username, Set<Role> roles) {
         this.name = name;
         this.username = username;
         this.roles = roles;
     }
 
-//    public int getAge() {
-//        return Period.between(this.birthday, LocalDate.now()).getYears();
-//    }
+    public int getAge() {
+        if (this.birthday == null) {
+            return 0;
+        }
+        return Period.between(this.birthday, LocalDate.now()).getYears();
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -84,13 +95,14 @@ public class User implements UserDetails {
     public boolean isEnabled() {
         return true;
     }
+
     public void addEvent(Event event) {
-        events.add(event);
-        event.getUsers().add(this); // Обновляем коллекцию пользователей у события
+        subscriptions.add(event);
+        event.getSubscribers().add(this);
     }
 
     public void removeEvent(Event event) {
-        events.remove(event);
-        event.getUsers().remove(this); // Удаляем пользователя из коллекции у события
+        subscriptions.remove(event);
+        event.getSubscribers().remove(this);
     }
 }
