@@ -23,6 +23,7 @@ public class User implements UserDetails {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String imageSrc;
+    private String about;
     @Size(min = 3, message = "Minimum 3 symbols")
     private String name;
     @Column(name = "username", unique = true)
@@ -37,7 +38,7 @@ public class User implements UserDetails {
     @EqualsAndHashCode.Exclude
     private Set<Role> roles;
 
-    @ManyToMany(cascade = CascadeType.ALL)
+    @ManyToMany
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private Set<Event> subscriptions = new HashSet<>();

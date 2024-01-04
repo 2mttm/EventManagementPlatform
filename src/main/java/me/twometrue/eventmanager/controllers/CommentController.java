@@ -34,6 +34,7 @@ public class CommentController {
         if (user == null || event == null) return "redirect:/events/{id}";
 
         commentForm.setUser(user);
+        commentForm.setId(null);
 
         model.addAttribute("user", user);
         model.addAttribute("event", event);

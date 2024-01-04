@@ -8,57 +8,37 @@
 <body class="container" style="padding-top: 4.5rem;">
 <header th:insert="~{blocks/header :: header}"></header>
 
-<div class="mb-3">
-    <div class="row">
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-header">
-                    <h2>User Profile</h2>
-                </div>
+    <div class="d-flex gap-3 flex-column mb-3">
+        <div class="d-flex gap-3">
+            <img th:src="${user.imageSrc}" th:alt="${user.imageSrc}" class="rounded card" onerror="this.onerror=null;this.src='/images/placeholder.jpg';"
+            style="max-width:40%; max-height: 50vh;">
+            <div class="card w-100">
                 <div class="card-body">
-                    <div class="mb-3">
-                        <label for="name" class="form-label">Name</label>
-                        <input type="text" class="form-control" id="name" th:value="${user.name}" readonly>
-                    </div>
-                    <div class="mb-3">
-                        <label for="username" class="form-label">Email</label>
-                        <input type="text" class="form-control" id="username" th:value="${user.username}" readonly>
-                    </div>
-                    <div class="mb-3">
-                        <label for="birthday" class="form-label">Birthday</label>
-                        <input type="text" class="form-control" id="birthday" th:value="${user.birthday}" readonly>
-                    </div>
-                    <div class="mb-3">
-                        <label for="age" class="form-label">Age</label>
-                        <input type="text" class="form-control" id="age" th:value="${user.getAge()}" readonly>
-                    </div>
-                    <div class="mb-3">
-                        <label for="roles" class="form-label">Roles</label>
-                        <ul th:if="${#lists.size(user.roles) > 0}" id="roles">
-                            <li th:each="role : ${user.roles}" th:text="${role.name}"></li>
-                        </ul>
-                        <span th:if="${#lists.size(user.roles) == 0}">No roles assigned.</span>
-                    </div>
+                    <h3 class="card-title" th:text="${user.name}"></h3>
+
+                    <div th:text="'User id: ' + ${user.id}"></div>
+                    <div th:text="'User email: ' + ${user.username}"></div>
+                    <div th:text="'User roles: ' + ${user.roles}"></div>
+                    <div th:text="'About me: ' + ${user.about}"></div>
                 </div>
+
             </div>
         </div>
-        <div class="col-md-6">
-            <div class="card">
-                <div class="card-header">
-                    <h2>User Events</h2>
-                </div>
-                <div class="card-body">
-                    <div class="mb-3">
-                        <ul th:if="${#lists.size(user.events) > 0}">
-                            <li th:each="event : ${user.events}" th:text="${event.title}"></li>
-                        </ul>
-                        <span th:if="${#lists.size(user.events) == 0}">No events available.</span>
-                    </div>
-                </div>
+        <div class="d-flex justify-content-around card flex-row p-4">
+            <div class="d-flex flex-column align-items-center">
+                <div th:text="${user.comments.size()}" class="fs-1 fw-bolder"></div>
+                <div>Comments Written</div>
+            </div>
+            <div class="d-flex flex-column align-items-center">
+                <div th:text="${user.events.size()}" class="fs-1 fw-bolder"></div>
+                <div>Events Authored</div>
+            </div>
+            <div class="d-flex flex-column align-items-center">
+                <div th:text="${user.subscriptions.size()}" class="fs-1 fw-bolder"></div>
+                <div>Events Participations</div>
             </div>
         </div>
     </div>
-</div>
 
 <footer th:insert="~{blocks/footer :: footer}"></footer>
 </body>

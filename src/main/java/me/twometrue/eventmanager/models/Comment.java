@@ -1,10 +1,7 @@
 package me.twometrue.eventmanager.models;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 import java.time.LocalDateTime;
 @Entity
@@ -16,10 +13,10 @@ public class Comment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @ManyToOne
-    @JoinColumn(name = "event_id", nullable = false)
+    @EqualsAndHashCode.Exclude
     private Event event;
     @ManyToOne
-    @JoinColumn(name = "user_id", nullable = false)
+    @EqualsAndHashCode.Exclude
     private User user;
     private String content;
     private LocalDateTime creationTime;

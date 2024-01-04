@@ -25,15 +25,21 @@ public class MainController {
     private UserService userService;
 
     @GetMapping("/")
-    public String home(Model model) {
+    public String home(Model model, @AuthenticationPrincipal UserDetails userDetails) {
         List<Event> events = eventService.getUpcoming();
         model.addAttribute("events", events);
+
+        if (userDetails != null) {
+            User user = userService.findUserByEmail(userDetails.getUsername());
+            model.addAttribute("user", user);
+        }
+
         return "home";
     }
 
-    @GetMapping("/profile")
-    public String profile(Model model, @AuthenticationPrincipal UserDetails userDetails){
-        User user = userService.findUserByEmail(userDetails.getUsername());
+    @GetMapping("/profile/{id}")
+    public String profile(Model model, @PathVariable Long id){
+        User user = userService.findUserById(id);
         model.addAttribute("user", user);
         return "profile";
     }
@@ -54,12 +60,15 @@ public class MainController {
     @GetMapping("/events/{id}")
     public String getEventById(@PathVariable Long id, Model model, @RequestParam Map<String, String> params, @AuthenticationPrincipal UserDetails userDetails) {
         Event event = eventService.findEventById(id, 1);
-        System.out.println(event);
 
         model.addAttribute("event", event);
         model.addAttribute("edit", params.get("edit"));
-        model.addAttribute("subscribed", event.getSubscribers().contains(userDetails));
-        model.addAttribute("user", userDetails);
+
+        if (userDetails != null){
+            User user = userService.findUserByEmail(userDetails.getUsername());
+            model.addAttribute("user", user);
+            model.addAttribute("subscribed", event.getSubscribers().contains(user));
+        }
 
         return "event";
     }

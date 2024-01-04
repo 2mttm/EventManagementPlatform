@@ -9,6 +9,7 @@
 </head>
 <body class="container" style="padding-top: 4.5rem;">
     <header th:insert="~{blocks/header :: header}"></header>
+    <th:block th:insert="~{blocks/alerts :: danger}" th:if="${error != null}"></th:block>
 
     <h1 class="mb-4 text-center">Upcoming events</h1>
     <div th:insert="~{blocks/eventCard :: events}"></div>

@@ -46,7 +46,7 @@
             <li class="nav-item dropdown">
               <button class="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false" sec:authentication="name"></button>
               <ul class="dropdown-menu">
-                <li><a class="dropdown-item" href="/profile">My Profile</a></li>
+                <li><a class="dropdown-item" th:href="${'/profile/' + user.id}">My Profile</a></li>
                 <li><a class="dropdown-item" href="/events/new">New Event</a></li>
                 <li sec:authorize="hasRole('ROLE_ADMIN')"><a class="dropdown-item" href="/admin">Admin Panel</a></li>
                 <li><hr class="dropdown-divider"></li>

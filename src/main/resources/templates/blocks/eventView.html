@@ -1,6 +1,6 @@
 <!--/*@thymesVar id="event" type="me.twometrue.eventmanager.models.Event"*/-->
 <!DOCTYPE html>
-<html lang="en" xmlns:th="http://www.w3.org/1999/html" xmlns:sec="http://www.thymeleaf.org/extras/spring-security6">
+<html lang="en" xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security6">
 <body>
     <div th:fragment="eventView">
         <div class="d-flex mb-3">
@@ -19,8 +19,8 @@
                 <div class="card-header d-flex justify-content-between">
                     <h2 th:text="${event.title}" class="text-center flex-fill mb-0"></h2>
                     <th:block sec:authorize="isAuthenticated()">
-                        <a type="button" th:text="${subscribed ? 'Unsubscribe' : 'Subscribe'}" th:classappend="${subscribed} ? btn-outline-danger : btn-outline-success" th:href="${event.id} + '/toggleSubscription'" class="btn me-2"></a>
-                        <div class="btn-group" th:if="${#authorization.expression('hasRole(''EDITOR'')') or #authentication.principal.id == event.authorId}">
+                        <a type="button" th:text="${subscribed ? 'Unsubscribe' : 'Subscribe'}" th:classappend="${subscribed} ? 'btn-outline-danger' : 'btn-outline-success'" th:href="${event.id} + '/toggleSubscription'" class="btn me-2"></a>
+                        <div class="btn-group" th:if="${#authorization.expression('hasRole(''EDITOR'')') or #authentication.principal.id == event.author.id}">
                             <a type="button" class="btn btn-outline-primary" href="?edit">Edit</a>
                             <a type="button" class="btn btn-outline-danger" href="?delete">Delete</a>
                         </div>
