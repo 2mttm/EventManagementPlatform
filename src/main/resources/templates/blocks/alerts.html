@@ -1,0 +1,14 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Danger Alert</title>
+</head>
+<body>
+    <!--/*@thymesVar id="error" type="java.lang.String"*/-->
+    <div class="alert alert-danger" role="alert" th:fragment="danger">
+        <i class="bi bi-exclamation-triangle"></i>
+        <span th:text="${error}"></span>
+    </div>
+</body>
+</html>

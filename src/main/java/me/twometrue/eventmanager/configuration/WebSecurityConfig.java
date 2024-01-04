@@ -25,10 +25,10 @@ public class WebSecurityConfig {
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(requests -> requests
                         .requestMatchers("/").permitAll()
-                        .requestMatchers("/popular").permitAll()
-                        .requestMatchers("/history").permitAll()
-                        .requestMatchers("/about").permitAll()
-                        .requestMatchers("/register").permitAll()
+//                        .requestMatchers("/popular").permitAll()
+//                        .requestMatchers("/history").permitAll()
+//                        .requestMatchers("/about").permitAll()
+//                        .requestMatchers("/register").permitAll()
 
                         .requestMatchers("/events/new").hasAnyRole("ADMIN", "EDITOR", "USER")
 
