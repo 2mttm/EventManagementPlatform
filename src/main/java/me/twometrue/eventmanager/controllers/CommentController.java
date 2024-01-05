@@ -26,7 +26,7 @@ public class CommentController {
     private EventService eventService;
 
     @PostMapping("/events/{id}/comment")
-    public String publishComment(@ModelAttribute("commentForm") @Valid Comment commentForm, @PathVariable Long id, Model model, @RequestParam Map<String, String> params, @AuthenticationPrincipal UserDetails userDetails){
+    public String publishComment(@ModelAttribute("commentForm") @Valid Comment commentForm, @PathVariable Long id, @RequestParam Map<String, String> params, @AuthenticationPrincipal UserDetails userDetails){
 
         User user = userService.findUserByEmail(userDetails.getUsername());
         Event event = eventService.findEventById(commentForm.getEvent().getId(), 0);
@@ -35,9 +35,6 @@ public class CommentController {
 
         commentForm.setUser(user);
         commentForm.setId(null);
-
-        model.addAttribute("user", user);
-        model.addAttribute("event", event);
 
         commentService.save(commentForm);
         return "redirect:/events/{id}";

@@ -14,7 +14,10 @@
             style="max-width:40%; max-height: 50vh;">
             <div class="card w-100">
                 <div class="card-body">
-                    <h3 class="card-title" th:text="${user.name}"></h3>
+                    <div class="d-flex flex-row justify-content-between">
+                        <h3 class="card-title" th:text="${user.name}"></h3>
+<!--                        <a type="button" class="btn btn-primary" href="?edit">Edit</a>-->
+                    </div>
 
                     <div th:text="'User id: ' + ${user.id}"></div>
                     <div th:text="'User email: ' + ${user.username}"></div>
