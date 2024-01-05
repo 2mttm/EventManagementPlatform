@@ -30,25 +30,36 @@ public class MainController {
         model.addAttribute("events", events);
 
         if (userDetails != null) {
-            User user = userService.findUserByEmail(userDetails.getUsername());
-            model.addAttribute("user", user);
+            User currentUser = userService.findUserByEmail(userDetails.getUsername());
+            model.addAttribute("currentUser", currentUser);
         }
 
         return "home";
     }
 
     @GetMapping("/profile/{id}")
-    public String profile(Model model, @PathVariable Long id){
+    public String profile(Model model, @PathVariable Long id, @AuthenticationPrincipal UserDetails userDetails){
         User user = userService.findUserById(id);
         model.addAttribute("user", user);
+
+        if (userDetails != null) {
+            User currentUser = userService.findUserByEmail(userDetails.getUsername());
+            model.addAttribute("currentUser", currentUser);
+        }
+
         return "profile";
     }
 
     @GetMapping("/popular")
-    public String popular(Model model) {
-
+    public String popular(Model model, @AuthenticationPrincipal UserDetails userDetails) {
         List<Event> events = eventService.getAllEventsSortedByViews();
         model.addAttribute("events", events);
+
+        if (userDetails != null) {
+            User currentUser = userService.findUserByEmail(userDetails.getUsername());
+            model.addAttribute("currentUser", currentUser);
+        }
+
         return "home";
     }
 
@@ -65,9 +76,9 @@ public class MainController {
         model.addAttribute("edit", params.get("edit"));
 
         if (userDetails != null){
-            User user = userService.findUserByEmail(userDetails.getUsername());
-            model.addAttribute("user", user);
-            model.addAttribute("subscribed", event.getSubscribers().contains(user));
+            User currentUser = userService.findUserByEmail(userDetails.getUsername());
+            model.addAttribute("currentUser", currentUser);
+            model.addAttribute("subscribed", event.getSubscribers().contains(currentUser));
         }
 
         return "event";

@@ -6,12 +6,12 @@
 </head>
 <body>
 <div th:fragment="comments" class="d-flex card p-3 gap-3 mb-3">
-    <!--/*@thymesVar id="user" type="me.twometrue.eventmanager.models.User"*/-->
+    <!--/*@thymesVar id="currentUser" type="me.twometrue.eventmanager.models.User"*/-->
     <!--/*@thymesVar id="event" type="me.twometrue.eventmanager.models.Event"*/-->
     <!--/*@thymesVar id="comment" type="me.twometrue.eventmanager.models.Comment"*/-->
 
-    <form class="d-flex gap-3" method="post" th:action="${event.id} + '/comment'" th:if="${user != null}">
-        <img th:src="${user.imageSrc}" width="50" class="rounded-circle" onerror="this.onerror=null;this.src='/images/placeholder.jpg';">
+    <form class="d-flex gap-3" method="post" th:action="${event.id} + '/comment'" th:if="${currentUser != null}">
+        <img th:src="${currentUser.imageSrc}" width="50" class="rounded-circle" onerror="this.onerror=null;this.src='/images/placeholder.jpg';">
         <input type="text" class="form-control" placeholder="Enter your comment..." id="content" name="content">
 
         <input type="hidden" name="user" th:value="${#authentication.principal.id}">

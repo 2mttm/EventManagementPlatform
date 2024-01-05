@@ -6,8 +6,9 @@
 <!--An events list is needed for processing the next block-->
 <div class="d-flex flex-column" th:fragment="events">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.2/font/bootstrap-icons.min.css">
-  <div class="card shadow border-0 mb-4" th:fragment="eventCard" th:each="event, eventStat : ${events}" th:classappend="${(eventStat.index % 2 == 1 ? 'card-reversed ' : '') + (event.theme)}">
-    <div class="row g-0">
+  <div class="card shadow border-0 mb-4 d-flex"
+       th:fragment="eventCard" th:each="event, eventStat : ${events}" th:classappend="${(eventStat.index % 2 == 1 ? 'flex-row-reverse card-reversed ' : 'flex-row ') + (event.theme)}">
+<!--    <div class="row g-0">-->
       <div class="col-3 card-image">
         <img th:src="${event.imageUrl}" alt="event" class="img-fluid rounded-0 h-100" onerror="this.onerror=null;this.src='/images/placeholder.jpg';">
       </div>
@@ -48,7 +49,7 @@
         </div>
       </div>
     </div>
-  </div>
+<!--  </div>-->
 </div>
 
 </body>
