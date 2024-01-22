@@ -1,5 +1,6 @@
 package me.twometrue.eventmanager.controllers;
 
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.Valid;
 import me.twometrue.eventmanager.models.Event;
 import me.twometrue.eventmanager.models.User;
@@ -69,7 +70,8 @@ public class MainController {
     }
 
     @GetMapping("/events/{id}")
-    public String getEventById(@PathVariable Long id, Model model, @RequestParam Map<String, String> params, @AuthenticationPrincipal UserDetails userDetails) {
+    public String getEventById(@PathVariable Long id, Model model, @RequestParam Map<String, String> params,
+                               @AuthenticationPrincipal UserDetails userDetails) {
         Event event = eventService.findEventById(id, 1);
 
         model.addAttribute("event", event);
@@ -85,9 +87,11 @@ public class MainController {
     }
 
     @PostMapping("/events/{id}")
-    public String saveEventById(@ModelAttribute("eventForm") @Valid Event eventForm, Model model, RedirectAttributes redirectAttributes) {
+    public String saveEventById(@ModelAttribute("eventForm") @Valid Event eventForm, Model model,
+                                RedirectAttributes redirectAttributes,
+                                @AuthenticationPrincipal UserDetails userDetails) {
 
-        Event event = eventService.saveEvent(eventForm);
+        Event event = eventService.saveEvent(eventForm, userDetails);
         model.addAttribute("event", event);
 
         redirectAttributes.addAttribute("id", event.getId());
@@ -95,15 +99,12 @@ public class MainController {
     }
 
     @GetMapping("/events/{id}/toggleSubscription")
-    public String toggleSubscription(@PathVariable Long id, Model model, @RequestParam Map<String, String> params, @AuthenticationPrincipal UserDetails userDetails) {
+    public String toggleSubscription(@PathVariable Long id, Model model, @RequestParam Map<String, String> params,
+                                     @AuthenticationPrincipal UserDetails userDetails) {
         Event event = eventService.findEventById(id, 0);
         User user = userService.findUserByEmail(userDetails.getUsername());
-        if (event.getSubscribers().contains(user)) {
-            event.removeUser(user);
-        } else {
-            event.addUser(user);
-        }
-        eventService.saveEvent(event);
+
+        eventService.toggleSubscription(event, user);
         return "redirect:/events/{id}";
     }
 
@@ -116,13 +117,57 @@ public class MainController {
     }
 
     @PostMapping("/events/new")
-    public String createEvent(@ModelAttribute("eventForm") @Valid Event eventForm, BindingResult bindingResult, Model model, RedirectAttributes redirectAttributes) {
+    public String createEvent(@ModelAttribute("eventForm") @Valid Event eventForm,
+                              BindingResult bindingResult,
+                              Model model, RedirectAttributes redirectAttributes,
+                              @AuthenticationPrincipal UserDetails userDetails) {
         if (bindingResult.hasErrors()) {
             return "event";
         }
-        Event savedEvent = eventService.saveEvent(eventForm);
+        Event savedEvent = eventService.saveEvent(eventForm, userDetails);
         redirectAttributes.addAttribute("id", savedEvent.getId());
         return "redirect:/events/{id}";
+    }
+
+    @GetMapping("/my-events")
+    public String myEvents(Model model, @AuthenticationPrincipal UserDetails userDetails){
+
+        List<Event> events = eventService.getUserEvents(userService.findUserByEmail(userDetails.getUsername()));
+        model.addAttribute("events", events);
+
+        User currentUser = userService.findUserByEmail(userDetails.getUsername());
+        model.addAttribute("currentUser", currentUser);
+
+        return "home";
+    }
+    @GetMapping("/events/{id}/approve")
+    public String approveEvent(@PathVariable Long id, Model model, @RequestParam Map<String, String> params,
+                                     @AuthenticationPrincipal UserDetails userDetails) {
+        Event event = eventService.findEventById(id, 0);
+        eventService.approveEvent(event, userDetails);
+        return "redirect:/events/{id}";
+    }
+
+    @GetMapping("/approve-events")
+    public String approveEvents(Model model, @AuthenticationPrincipal UserDetails userDetails){
+
+        List<Event> events = eventService.getEventsToApprove(userService.findUserByEmail(userDetails.getUsername()));
+        model.addAttribute("events", events);
+
+        User currentUser = userService.findUserByEmail(userDetails.getUsername());
+        model.addAttribute("currentUser", currentUser);
+
+        return "home";
+    }
+
+    @GetMapping("/events/{id}/delete")
+    public String deleteEvent(@PathVariable Long id, @AuthenticationPrincipal UserDetails userDetails, HttpServletRequest request){
+        Event event = eventService.findEventById(id, 0);
+        if (request.isUserInRole("ROLE_EDITOR") || event.getAuthor().getUsername().equals(userDetails.getUsername())) {
+            eventService.deleteEvent(event);
+        }
+
+        return "redirect:/";
     }
 
 }

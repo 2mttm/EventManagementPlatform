@@ -15,14 +15,16 @@
                 </div>
 
             </div>
-            <div class="card">
+            <div class="card flex-fill">
                 <div class="card-header d-flex justify-content-between">
                     <h2 th:text="${event.title}" class="text-center flex-fill mb-0"></h2>
                     <th:block sec:authorize="isAuthenticated()">
-                        <a type="button" th:text="${subscribed ? 'Unsubscribe' : 'Subscribe'}" th:classappend="${subscribed} ? 'btn-outline-danger' : 'btn-outline-success'" th:href="${event.id} + '/toggleSubscription'" class="btn me-2"></a>
+                        <a type="button" th:if="${event.approvedByAuthor and event.approvedByEditor}" th:text="${subscribed ? 'Unsubscribe' : 'Subscribe'}" th:classappend="${subscribed} ? 'btn-outline-danger' : 'btn-outline-success'" th:href="${event.id} + '/toggleSubscription'" class="btn me-2"></a>
+                        <a type="button" th:if="${!event.approvedByEditor and #authorization.expression('hasRole(''EDITOR'')') and currentUser.id != event.author.id or !event.approvedByAuthor and #authentication.principal.id == event.author.id}" th:href="${event.id} + '/approve'" class="btn btn-outline-success me-2">Approve</a>
+
                         <div class="btn-group" th:if="${#authorization.expression('hasRole(''EDITOR'')') or #authentication.principal.id == event.author.id}">
                             <a type="button" class="btn btn-outline-primary" href="?edit">Edit</a>
-                            <a type="button" class="btn btn-outline-danger" href="?delete">Delete</a>
+                            <a type="button" class="btn btn-outline-danger" th:href="${event.id} + '/delete'">Delete</a>
                         </div>
                     </th:block>
 

@@ -5,7 +5,7 @@
 <div class="container-fluid" th:fragment="eventEdit">
     <div class="row">
         <div class="col-lg-12 mb-5">
-            <form action="/events/new" method="post">
+            <form th:attr="action=${event.id == null ? '/events/new' : '/events/' + event.id}" method="post">
                 <div class="form-floating mb-4">
                     <input name="title" type="text" class="form-control shadow-none" id="title" placeholder="" th:value="${event.title}">
                     <label for="title" class="form-label">Title</label>

@@ -11,7 +11,7 @@
     --card-background-color: rgba(52, 58, 64, 0.1);
 }
 .card{
-    max-height: 300px;
+    /*max-height: 300px;*/
     overflow: hidden;
     border-radius: 15px;
     background-color: var(--bs-secondary-bg);
@@ -54,7 +54,7 @@
 }
 .card-image{
     overflow: hidden;
-    max-height: 300px;
+    /*max-height: 300px;*/
 }
 .card-image>img{
     transition: transform 0.3s;

@@ -30,16 +30,18 @@ public class Event {
     @Column(length = 65555)
     private String imageUrl;
     private String theme;
+    private boolean approvedByAuthor;
+    private boolean approvedByEditor;
 
     private double latitude;
     private double longitude;
 
-    @ManyToMany(mappedBy="subscriptions")
+    @ManyToMany(mappedBy="subscriptions", fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private Set<User> subscribers = new HashSet<>();
 
-    @OneToMany(mappedBy = "event")
+    @OneToMany(mappedBy = "event", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private Set<Comment> comments = new HashSet<>();
@@ -68,7 +70,6 @@ public class Event {
         return this.isFinished;
     }
     public Event update(Event other){
-        this.author = other.getAuthor();
         this.title = other.getTitle();
         this.description = other.getDescription();
         this.location = other.getLocation();

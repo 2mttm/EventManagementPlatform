@@ -38,7 +38,7 @@ public class User implements UserDetails {
     @EqualsAndHashCode.Exclude
     private Set<Role> roles;
 
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER)
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
     private Set<Event> subscriptions = new HashSet<>();
@@ -105,5 +105,8 @@ public class User implements UserDetails {
     public void removeEvent(Event event) {
         subscriptions.remove(event);
         event.getSubscribers().remove(this);
+    }
+    public boolean hasRole(Role role){
+        return this.roles.contains(role);
     }
 }

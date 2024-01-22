@@ -12,10 +12,10 @@ public class Comment {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.REMOVE)
     @EqualsAndHashCode.Exclude
     private Event event;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.REMOVE)
     @EqualsAndHashCode.Exclude
     private User user;
     private String content;
