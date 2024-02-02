@@ -83,7 +83,8 @@ public class MainController {
             model.addAttribute("subscribed", event.getSubscribers().contains(currentUser));
         }
 
-        return "event";
+        if (event != null) return "event";
+        else return "redirect:/events";
     }
 
     @PostMapping("/events/{id}")
