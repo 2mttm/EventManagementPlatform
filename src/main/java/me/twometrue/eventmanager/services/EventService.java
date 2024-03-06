@@ -2,6 +2,10 @@ package me.twometrue.eventmanager.services;
 
 import me.twometrue.eventmanager.models.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -131,5 +135,16 @@ public class EventService {
             }
         }
     }
-
+    public Page<Event> findAll(Example<Event> example, Pageable pageable) {
+        return eventRepository.findAll(example, pageable);
+    }
+    public Page<Event> findAll(Pageable pageable) {
+        return eventRepository.findAll(pageable);
+    }
+    public Optional<Event> findById(Long id) {
+        return eventRepository.findById(id);
+    }
+    public List<Event> findAll(Example<Event> example) {
+        return eventRepository.findAll(example);
+    }
 }

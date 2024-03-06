@@ -1,5 +1,8 @@
 package me.twometrue.eventmanager.models;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
 import lombok.*;
@@ -18,39 +21,47 @@ import java.util.Set;
 @AllArgsConstructor
 @Entity
 @Table(name = "users")
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    @JsonIgnore
     private String imageSrc;
     private String about;
     @Size(min = 3, message = "Minimum 3 symbols")
     private String name;
     @Column(name = "username", unique = true)
     private String username;
+    @JsonIgnore
     private LocalDate birthday;
     @ToString.Exclude
+    @JsonIgnore
     private String password;
     @Transient
     private int age;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @EqualsAndHashCode.Exclude
+    @JsonIgnore
     private Set<Role> roles;
 
     @ManyToMany(fetch = FetchType.EAGER)
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
+    @JsonIgnore
     private Set<Event> subscriptions = new HashSet<>();
 
     @OneToMany(mappedBy = "author")
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
+    @JsonIgnore
     private Set<Event> events = new HashSet<>();
 
     @OneToMany(mappedBy = "user")
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
+    @JsonIgnore
     private Set<Comment> comments = new HashSet<>();
 
     public User(String name, String username, LocalDate birthday) {

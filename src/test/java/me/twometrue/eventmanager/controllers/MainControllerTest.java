@@ -1,7 +1,5 @@
 package me.twometrue.eventmanager.controllers;
 
-import me.twometrue.eventmanager.configuration.MvcConfig;
-import me.twometrue.eventmanager.configuration.WebSecurityConfig;
 import me.twometrue.eventmanager.services.EventService;
 import me.twometrue.eventmanager.services.UserService;
 import org.junit.jupiter.api.BeforeEach;

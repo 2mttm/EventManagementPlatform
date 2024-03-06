@@ -15,11 +15,11 @@ import java.security.Principal;
 @org.springframework.web.bind.annotation.ControllerAdvice
 public class ControllerAdvice {
     private final EventService eventService;
-    private final UserService userService;
+//    private final UserService userService;
     @Autowired
-    public ControllerAdvice(EventService eventService, UserService userService) {
+    public ControllerAdvice(EventService eventService) {
         this.eventService = eventService;
-        this.userService = userService;
+//        this.userService = userService;
     }
 
     @ExceptionHandler(Exception.class)
@@ -31,10 +31,10 @@ public class ControllerAdvice {
         return "redirect:/";
     }
 
-    @ModelAttribute("myEventsBadge")
-    public int myEventsBadge(@AuthenticationPrincipal UserDetails userDetails) {
-        if (userDetails != null)
-            return eventService.getNumberOfApprovableEvents(userService.findUserByEmail(userDetails.getUsername()));
-        else return 0;
-    }
+//    @ModelAttribute("myEventsBadge")
+//    public int myEventsBadge(@AuthenticationPrincipal UserDetails userDetails) {
+//        if (userDetails != null)
+//            return eventService.getNumberOfApprovableEvents(userService.findUserByEmail(userDetails.getUsername()));
+//        else return 0;
+//    }
 }

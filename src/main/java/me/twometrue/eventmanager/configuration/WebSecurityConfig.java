@@ -20,7 +20,7 @@ public class WebSecurityConfig {
     }
 
     @Bean
-    protected SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity, UserService userService) throws Exception {
+    protected SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
         httpSecurity
                 .csrf(csrf -> csrf.disable())
                 .authorizeHttpRequests(requests -> requests
@@ -33,7 +33,7 @@ public class WebSecurityConfig {
                         .requestMatchers("/events/new").hasAnyRole("ADMIN", "EDITOR", "USER")
 
                         .requestMatchers("/admin/**").hasRole("ADMIN")
-
+                        .requestMatchers("/api/**").permitAll()
                         .anyRequest().permitAll())
 
                 .formLogin(form -> form

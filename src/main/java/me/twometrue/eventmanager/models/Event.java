@@ -1,5 +1,8 @@
 package me.twometrue.eventmanager.models;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -12,11 +15,13 @@ import java.util.Set;
 @Table(name = "events")
 @AllArgsConstructor
 @NoArgsConstructor
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Event {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @ManyToOne
+    @JsonIgnore
     private User author;
     private String title;
     @Column(length = 65555)
@@ -39,12 +44,19 @@ public class Event {
     @ManyToMany(mappedBy="subscriptions", fetch = FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
+    @JsonIgnore
     private Set<User> subscribers = new HashSet<>();
 
     @OneToMany(mappedBy = "event", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
     @EqualsAndHashCode.Exclude
     @ToString.Exclude
+    @JsonIgnore
     private Set<Comment> comments = new HashSet<>();
+
+    public Event(Long id, String title){
+        this.id = id;
+        this.title = title;
+    }
 
     public Event(String title, String description, String category, String location, LocalDateTime start, LocalDateTime end, User author) {
         this.author = author;
