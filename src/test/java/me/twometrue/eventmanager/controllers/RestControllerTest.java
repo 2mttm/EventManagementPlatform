@@ -4,6 +4,7 @@ import me.twometrue.eventmanager.configuration.WebSecurityConfig;
 import me.twometrue.eventmanager.models.Event;
 import me.twometrue.eventmanager.models.EventRepository;
 import me.twometrue.eventmanager.models.User;
+import me.twometrue.eventmanager.services.CommentService;
 import me.twometrue.eventmanager.services.EventService;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -43,6 +44,8 @@ class RestControllerTest {
 
     @MockBean
     private EventService eventService;
+    @MockBean
+    private CommentService commentService;
 
     @InjectMocks
     private RestController restController;
