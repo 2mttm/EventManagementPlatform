@@ -1,7 +1,9 @@
 package me.twometrue.eventmanager.controllers;
 
+import me.twometrue.eventmanager.models.Comment;
 import me.twometrue.eventmanager.models.Event;
 import me.twometrue.eventmanager.models.User;
+import me.twometrue.eventmanager.services.CommentService;
 import me.twometrue.eventmanager.services.EventService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.*;
@@ -21,6 +23,8 @@ import java.util.Optional;
 public class RestController {
     @Autowired
     private EventService eventService;
+    @Autowired
+    private CommentService commentService;
 
     @GetMapping("")
     public ResponseEntity<Page<Event>> getAll(
@@ -38,27 +42,30 @@ public class RestController {
     @GetMapping(value = "/megaSearch")
     public ResponseEntity<Page<Event>> getFilteredAndSorted(
             @ModelAttribute Event event,
-            @PageableDefault(sort = "id", direction = Sort.Direction.ASC) Pageable pageable){
+            @PageableDefault(sort = "id", direction = Sort.Direction.ASC) Pageable pageable) {
 
         ExampleMatcher exampleMatcher = ExampleMatcher.matchingAll()
                 .withIgnorePaths("views", "isFinished", "latitude", "longitude", "approvedByAuthor", "approvedByEditor")
                 .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING)
                 .withIgnoreNullValues();
 
-//        if (event.getStart() != null) {
-//            exampleMatcher = exampleMatcher.withMatcher("start", ExampleMatcher.GenericPropertyMatcher.of(ExampleMatcher.StringMatcher.DEFAULT)
-//                    .ignoreCase()
-//                    .transform(value -> {
-//                        if (value.get() instanceof LocalDateTime) {
-//                            return Optional.of(((LocalDateTime) value.get()).truncatedTo(ChronoUnit.HOURS));
-//                        }
-//                        return value;
-//                    }));
-//        }
-
         Example<Event> example = Example.of(event, exampleMatcher);
 
         Page<Event> events = eventService.findAll(example, pageable);
         return new ResponseEntity<>(events, events.isEmpty() ? HttpStatus.NOT_FOUND : HttpStatus.OK);
+    }
+    @GetMapping("/comments")
+    public ResponseEntity<Page<Comment>> searchComments(@ModelAttribute Comment comment,
+                                                        @PageableDefault(sort = "id") Pageable pageable){
+
+        ExampleMatcher exampleMatcher = ExampleMatcher.matchingAll()
+                .withIgnoreNullValues()
+                .withStringMatcher(ExampleMatcher.StringMatcher.CONTAINING);
+
+        Example<Comment> probe = Example.of(comment, exampleMatcher);
+
+        Page<Comment> comments = commentService.findAll(probe, pageable);
+
+        return new ResponseEntity<>(comments, comments.isEmpty() ? HttpStatus.NOT_FOUND : HttpStatus.OK);
     }
 }
