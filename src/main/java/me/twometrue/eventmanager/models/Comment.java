@@ -1,6 +1,7 @@
 package me.twometrue.eventmanager.models;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import jakarta.persistence.*;
 import lombok.*;
@@ -17,9 +18,11 @@ public class Comment {
     private Long id;
     @ManyToOne(cascade = CascadeType.REMOVE)
     @EqualsAndHashCode.Exclude
+    @JsonIdentityReference(alwaysAsId = true)
     private Event event;
     @ManyToOne(cascade = CascadeType.REMOVE)
     @EqualsAndHashCode.Exclude
+    @JsonIdentityReference(alwaysAsId = true)
     private User user;
     private String content;
     private LocalDateTime creationTime;
